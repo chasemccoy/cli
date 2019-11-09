@@ -1,0 +1,23 @@
+{
+  "name": "chs",
+  "version": "0.1.0",
+  "bin": "./build/cli.js",
+  "author": "Chase McCoy <chasem000@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "ink": "^2.5.0",
+    "ink-select-input": "^3.1.2",
+    "pastel": "^1.0.3",
+    "prop-types": "^15.7.2",
+    "react": "^16.11.0"
+  },
+  "scripts": {
+    "build": "pastel build",
+    "start": "pastel dev",
+    "prepare": "pastel build"
+  },
+  "files": [
+    "build"
+  ]
+}
