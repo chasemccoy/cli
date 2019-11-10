@@ -8,6 +8,8 @@
   "dependencies": {
     "ink": "^2.5.0",
     "ink-select-input": "^3.1.2",
+    "ink-text-input": "^3.2.1",
+    "outdent": "^0.7.0",
     "pastel": "^1.0.3",
     "prop-types": "^15.7.2",
     "react": "^16.11.0"
@@ -15,9 +17,31 @@
   "scripts": {
     "build": "pastel build",
     "start": "pastel dev",
-    "prepare": "pastel build"
+    "prepare": "pastel build",
+    "test": "xo"
   },
   "files": [
     "build"
-  ]
+  ],
+  "devDependencies": {
+    "eslint-config-xo-react": "^0.20.0",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^2.2.0",
+    "lint-staged": "^9.4.2",
+    "xo": "^0.25.3"
+  },
+  "xo": {
+    "prettier": true,
+    "extends": "xo-react",
+    "rules": {
+      "react/boolean-prop-naming": "off",
+      "react/prop-types": "off"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "xo --fix",
+      "git add"
+    ]
+  }
 }
