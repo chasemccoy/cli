@@ -6,6 +6,9 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@sindresorhus/slugify": "^0.9.1",
+    "date-fns": "^2.7.0",
+    "friendly-words": "^1.1.10",
     "ink": "^2.5.0",
     "ink-select-input": "^3.1.2",
     "ink-text-input": "^3.2.1",
@@ -33,10 +36,12 @@
   },
   "xo": {
     "prettier": true,
+    "semicolon": false,
     "extends": "xo-react",
     "rules": {
       "react/boolean-prop-naming": "off",
-      "react/prop-types": "off"
+      "react/prop-types": "off",
+      "unicorn/filename-case": "off"
     }
   },
   "lint-staged": {
