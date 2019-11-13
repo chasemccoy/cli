@@ -6,9 +6,9 @@ import SelectFile from '../../utils/SelectFile'
 import {createMDXFile, getFileName, clipboardToMarkdown} from '../../utils'
 import useForm from '../../utils/useForm'
 
-const createNote = (destination, open, clip, append, formData) => {
+const createNote = (destination, data) => {
+	const {message, title, slug, open, clip, append} = data
 	const clipping = clip ? clipboardToMarkdown() : undefined
-	const {message, title, slug} = formData
 	const contents = [clipping, message].filter(Boolean).join('\n')
 
 	createMDXFile(destination, {
@@ -33,13 +33,16 @@ const NewNote = ({title, open, destination, clip, message, append}) => {
 		step: initialStep(),
 		title,
 		slug: getFileName(title),
-		message
+		message,
+		clip,
+		append,
+		open
 	}
 
 	const onSubmit = data => {
 		const {appendFile} = data
 		const filePath = appendFile ? `${destination}/${appendFile}` : destination
-		createNote(filePath, open, clip, append, formData)
+		createNote(filePath, data)
 	}
 
 	const [formData, setFormData] = useForm(onSubmit, initialFormData)
@@ -47,7 +50,7 @@ const NewNote = ({title, open, destination, clip, message, append}) => {
 
 	return (
 		<Box flexDirection="column">
-			{!title && !append && step !== 'success' && (
+			{!title && !append && step !== 'submit' && (
 				<TextInput
 					prompt="Note title:"
 					focus={step === 'title'}
