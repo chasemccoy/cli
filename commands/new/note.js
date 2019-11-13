@@ -1,21 +1,19 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import {Box, Color} from 'ink'
 import TextInput from '../../utils/TextInput'
 import SelectFile from '../../utils/SelectFile'
 import {createMDXFile, getFileName, clipboardToMarkdown} from '../../utils'
+import useForm from '../../utils/useForm'
 
-const formSteps = ['title', 'slug', 'selectFile', 'message', 'success']
-const formData = {}
-
-const createNote = (destination, open, clip, append) => {
+const createNote = (destination, open, clip, append, formData) => {
 	const clipping = clip ? clipboardToMarkdown() : undefined
-	const {message} = formData
+	const {message, title, slug} = formData
 	const contents = [clipping, message].filter(Boolean).join('\n')
 
 	createMDXFile(destination, {
-		title: formData.title,
-		slug: formData.slug,
+		title,
+		slug,
 		note: true,
 		contents,
 		open,
@@ -25,39 +23,27 @@ const createNote = (destination, open, clip, append) => {
 
 /// Create a new note
 const NewNote = ({title, open, destination, clip, message, append}) => {
-	const [slug, setSlug] = useState(getFileName(title))
-	const [appendFile, setAppendFile] = useState(null)
-	const [step, setStep] = useState(title ? 'success' : formSteps[0])
-
-	const onSuccess = useCallback(
-		(appendToFile = appendFile) => {
-			const filePath = appendToFile
-				? `${destination}/${appendToFile}`
-				: destination
-			createNote(filePath, open, clip, append)
-			setStep('success')
-		},
-		[appendFile, destination, open, clip, append]
-	)
-
-	const updateSlug = slug => {
-		setSlug(slug)
-		formData.slug = slug
+	const initialStep = () => {
+		if (append) return 'selectFile'
+		if (title) return 'submit'
+		return 'title'
 	}
 
-	useEffect(() => {
-		formData.message = message
+	const initialFormData = {
+		step: initialStep(),
+		title,
+		slug: getFileName(title),
+		message
+	}
 
-		if (append) {
-			setStep('selectFile')
-		} else if (title) {
-			formData.title = title
-			formData.slug = slug
-			onSuccess()
-		} else {
-			setStep('title')
-		}
-	}, [title, message, append, slug, onSuccess])
+	const onSubmit = data => {
+		const {appendFile} = data
+		const filePath = appendFile ? `${destination}/${appendFile}` : destination
+		createNote(filePath, open, clip, append, formData)
+	}
+
+	const [formData, setFormData] = useForm(onSubmit, initialFormData)
+	const {step} = formData
 
 	return (
 		<Box flexDirection="column">
@@ -66,13 +52,11 @@ const NewNote = ({title, open, destination, clip, message, append}) => {
 					prompt="Note title:"
 					focus={step === 'title'}
 					onSubmit={value => {
-						formData.title = value
-						updateSlug(getFileName(value))
-						if (value === '') {
-							setStep('slug')
-						} else {
-							onSuccess()
-						}
+						setFormData({
+							title: value,
+							slug: getFileName(value),
+							step: value === '' ? 'slug' : 'submit'
+						})
 					}}
 				/>
 			)}
@@ -80,11 +64,13 @@ const NewNote = ({title, open, destination, clip, message, append}) => {
 			{step === 'slug' && (
 				<TextInput
 					prompt="Note slug:"
-					defaultValue={slug}
+					defaultValue={formData.slug}
 					focus={step === 'slug'}
 					onSubmit={value => {
-						updateSlug(getFileName(value))
-						onSuccess()
+						setFormData({
+							slug: getFileName(value),
+							step: 'submit'
+						})
 					}}
 				/>
 			)}
@@ -95,12 +81,11 @@ const NewNote = ({title, open, destination, clip, message, append}) => {
 					directory={destination}
 					focus={step === 'selectFile'}
 					onSubmit={value => {
-						setAppendFile(value)
-						if (!message) {
-							setStep('message')
-						} else {
-							onSuccess(value)
+						const data = {
+							appendFile: value,
+							step: !message ? 'message' : 'submit'
 						}
+						setFormData(data)
 					}}
 				/>
 			)}
@@ -111,17 +96,19 @@ const NewNote = ({title, open, destination, clip, message, append}) => {
 					focus={step === 'message'}
 					flexDirection="column"
 					onSubmit={value => {
-						formData.message = value
-						onSuccess()
+						setFormData({
+							message: value,
+							step: 'submit'
+						})
 					}}
 				/>
 			)}
 
-			{step === 'success' && (
+			{step === 'submit' && (
 				<Color green>
 					{append
-						? `Appended to ${appendFile}!`
-						: `Note created at ${destination}/${slug}.mdx`}
+						? `Appended to ${formData.appendFile}!`
+						: `Note created at ${destination}/${formData.slug}.mdx`}
 				</Color>
 			)}
 		</Box>
