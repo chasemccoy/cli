@@ -1,18 +1,21 @@
 import React, {useState} from 'react'
 import InkTextInput from 'ink-text-input'
-import {Box} from 'ink'
+import {Box, Color} from 'ink'
 
 const TextInput = ({
 	prompt = 'Enter text:',
 	onSubmit,
 	defaultValue = '',
-	focus = true
+	focus = true,
+	...rest
 }) => {
 	const [value, setValue] = useState(defaultValue)
 
 	return (
-		<Box>
-			<Box marginRight={1}>{prompt}</Box>
+		<Box {...rest}>
+			<Box marginRight={1}>
+				<Color green>{prompt}</Color>
+			</Box>
 
 			<InkTextInput
 				value={value}

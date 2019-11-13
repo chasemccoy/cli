@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import PropTypes from 'prop-types'
 import SelectInput from 'ink-select-input'
 import {Box, Text} from 'ink'
 import {capitalize} from '../../utils'
@@ -14,7 +15,7 @@ const items = types.map(item => ({
 }))
 
 /// Create a new post or note
-const New = () => {
+const New = props => {
 	const [selectedType, setSelectedType] = useState(null)
 
 	const handleSelection = item => {
@@ -29,10 +30,31 @@ const New = () => {
 					<SelectInput items={items} onSelect={handleSelection} />
 				</Box>
 			)}
-			{selectedType === 'post' && <NewPost />}
-			{selectedType === 'note' && <NewNote />}
+			{selectedType === 'post' && <NewPost {...props} />}
+			{selectedType === 'note' && <NewNote {...props} />}
 		</>
 	)
+}
+
+New.propTypes = {
+	/// Add the contents of the clipboard to the resulting item
+	clip: PropTypes.bool,
+	/// Title of the item
+	title: PropTypes.string,
+	/// Open the item in VS Code
+	open: PropTypes.bool
+}
+
+New.defaultProps = {
+	clip: false,
+	title: null,
+	open: false
+}
+
+New.shortFlags = {
+	clip: 'c',
+	title: 't',
+	open: 'o'
 }
 
 export default New
