@@ -24,8 +24,14 @@ const createNote = (destination, data) => {
 /// Create a new note
 const NewNote = ({title, open, destination, clip, message, append}) => {
 	const initialStep = () => {
-		if (append) return 'selectFile'
-		if (title) return 'submit'
+		if (append) {
+			return 'selectFile'
+		}
+
+		if (title) {
+			return 'submit'
+		}
+
 		return 'title'
 	}
 

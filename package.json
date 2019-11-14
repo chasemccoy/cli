@@ -22,7 +22,7 @@
     "build": "pastel build",
     "start": "pastel dev",
     "prepare": "pastel build",
-    "test": "xo --fix"
+    "test": "xo --fix && node --experimental-modules ./tests/index.js"
   },
   "files": [
     "build"
@@ -43,7 +43,11 @@
       "react/boolean-prop-naming": "off",
       "react/prop-types": "off",
       "unicorn/filename-case": "off",
-      "no-negated-condition": "off"
+      "no-negated-condition": "off",
+      "import/extensions": "off",
+      "unicorn/import-index": "off",
+      "import/no-useless-path-segments": "off",
+      "unicorn/no-process-exit": "off"
     }
   },
   "lint-staged": {
@@ -56,5 +60,6 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  }
+  },
+  "type": "module"
 }

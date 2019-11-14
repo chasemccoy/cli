@@ -1,11 +1,14 @@
 import os from 'os'
 import fs from 'fs'
 import {execSync} from 'child_process'
-import {format} from 'date-fns'
-import {outdent} from 'outdent'
+import dateFunctions from 'date-fns'
+import outdentLib from 'outdent'
 import slugify from '@sindresorhus/slugify'
 import words from 'friendly-words'
 import glob from 'glob'
+
+const {format} = dateFunctions
+const {outdent} = outdentLib // eslint-disable-line import/no-named-as-default-member
 
 export {slugify}
 
@@ -62,16 +65,20 @@ export const createMDXFile = (destination, options) => {
 		slug = getFileName(title),
 		open = false,
 		note = false,
-		contents = '',
+		contents = null,
 		append = false
 	} = options
-	const filePath = `${destination}/${slug}.mdx`
-	const content = frontmatter(title, note) + contents
+	const filePath = append
+		? destination
+		: resolveHome(`${destination}/${slug}.mdx`)
+	const newFileContent = frontmatter(title, note) + contents
+	const appendingContent = contents ? '\n\n---\n\n' + contents : ''
+	const fileExists = fs.existsSync(filePath)
 
-	if (append) {
-		appendToFile(destination, '\n\n---\n\n' + contents)
+	if (append || fileExists) {
+		appendToFile(filePath, appendingContent)
 	} else {
-		writeToFile(filePath, content)
+		writeToFile(filePath, newFileContent)
 	}
 
 	if (open) {
@@ -80,15 +87,18 @@ export const createMDXFile = (destination, options) => {
 }
 
 export const clipboardToMarkdown = () => {
-	const command = `osascript -e 'try' -e 'the clipboard as "HTML"' -e 'end try' |perl -ne 'print chr foreach unpack("C*",pack("H*",substr($_,11,-3)))' | pandoc --from=html-native_divs-native_spans --to=gfm`
+	const command =
+		"osascript -e 'try' -e 'the clipboard as \"HTML\"' -e 'end try' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc --from=html-native_divs-native_spans --to=gfm"
 
 	const result = execSync(command).toString()
 
 	if (!result || result.trim().length === 0) {
-		return execSync(`osascript -e 'the clipboard as text'`).toString()
+		return execSync("osascript -e 'the clipboard as text'")
+			.toString()
+			.trim()
 	}
 
-	return result
+	return result.trim()
 }
 
 export const listDirectory = (path, extension = 'mdx') => {
