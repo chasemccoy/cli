@@ -1,14 +1,11 @@
 import os from 'os'
 import fs from 'fs'
 import {execSync} from 'child_process'
-import dateFunctions from 'date-fns'
-import outdentLib from 'outdent'
+import {format} from 'date-fns'
+import {outdent} from 'outdent'
 import slugify from '@sindresorhus/slugify'
 import words from 'friendly-words'
 import glob from 'glob'
-
-const {format} = dateFunctions
-const {outdent} = outdentLib // eslint-disable-line import/no-named-as-default-member
 
 export {slugify}
 

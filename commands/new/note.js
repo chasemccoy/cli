@@ -92,7 +92,7 @@ const NewNote = ({title, open, destination, clip, message, append}) => {
 					onSubmit={value => {
 						const data = {
 							appendFile: value,
-							step: !message ? 'message' : 'submit'
+							step: message ? 'submit' : 'message'
 						}
 						setFormData(data)
 					}}

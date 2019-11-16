@@ -8,6 +8,7 @@
   "dependencies": {
     "@sindresorhus/slugify": "^0.9.1",
     "date-fns": "^2.7.0",
+    "esm": "^3.2.25",
     "friendly-words": "^1.1.10",
     "glob": "^7.1.6",
     "ink": "^2.5.0",
@@ -22,7 +23,7 @@
     "build": "pastel build",
     "start": "pastel dev",
     "prepare": "pastel build",
-    "test": "xo --fix && node --experimental-modules ./tests/index.js"
+    "test": "xo --fix && node -r esm ./tests/index.js"
   },
   "files": [
     "build"
@@ -43,10 +44,6 @@
       "react/boolean-prop-naming": "off",
       "react/prop-types": "off",
       "unicorn/filename-case": "off",
-      "no-negated-condition": "off",
-      "import/extensions": "off",
-      "unicorn/import-index": "off",
-      "import/no-useless-path-segments": "off",
       "unicorn/no-process-exit": "off"
     }
   },
@@ -60,6 +57,5 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "type": "module"
+  }
 }

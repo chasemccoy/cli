@@ -1,12 +1,7 @@
-/* eslint-disable camelcase */
-import child_process from 'child_process'
-import dateFunctions from 'date-fns'
-import {test, assert} from '../utils/tiny-test.js'
-// prettier-ignore
-import { resolveHome, getFileName, clipboardToMarkdown } from '../utils/index.js'
-
-const {format} = dateFunctions
-const {execSync} = child_process
+import {execSync} from 'child_process'
+import {format} from 'date-fns'
+import {test, assert} from '../utils/tiny-test'
+import {resolveHome, getFileName, clipboardToMarkdown} from '../utils'
 
 test('resolveHome', () => {
 	assert(
