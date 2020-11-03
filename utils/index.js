@@ -68,7 +68,7 @@ export const createMDXFile = (destination, options) => {
 	const filePath = append
 		? destination
 		: resolveHome(`${destination}/${slug}.mdx`)
-	const newFileContent = frontmatter(title, note) + contents
+	const newFileContent = frontmatter(title, note) + (contents || '')
 	const appendingContent = contents ? '\n\n---\n\n' + contents : ''
 	const fileExists = fs.existsSync(filePath)
 

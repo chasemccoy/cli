@@ -49,11 +49,7 @@ const NewPost = ({title, open, destination, clip}) => {
 					onSubmit={value => {
 						formData.title = value
 						updateSlug(getFileName(value))
-						if (value === '') {
-							setStep('slug')
-						} else {
-							onSuccess()
-						}
+						setStep('slug')
 					}}
 				/>
 			)}

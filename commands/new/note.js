@@ -125,7 +125,7 @@ const NewNote = ({title, open, destination, clip, message, append}) => {
 }
 
 NewNote.propTypes = {
-	/// Path of the post
+	/// Path of the note
 	destination: PropTypes.string,
 	/// Title of the post
 	title: PropTypes.string,

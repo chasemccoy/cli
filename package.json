@@ -23,7 +23,7 @@
     "build": "pastel build",
     "start": "pastel dev",
     "prepare": "pastel build",
-    "test": "xo --fix && node -r esm ./tests/index.js"
+    "test": "xo --fix && yarn build && node -r esm ./tests/index.js"
   },
   "files": [
     "build"
